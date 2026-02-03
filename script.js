@@ -10,16 +10,23 @@ const moveNoButton = () => {
   const cta = document.querySelector(".cta");
   const ctaRect = cta.getBoundingClientRect();
   const btnRect = noBtn.getBoundingClientRect();
+  
+  // Padding from cta edges
+  const padding = 10;
+  
+  // Calculate available space within the cta container
+  const maxX = ctaRect.width - btnRect.width - padding * 2;
+  const maxY = ctaRect.height - btnRect.height - padding * 2;
 
-  const maxX = ctaRect.width - btnRect.width;
-  const maxY = ctaRect.height + 40;
-
-  const randomX = Math.max(0, Math.random() * maxX);
-  const randomY = Math.max(0, Math.random() * maxY);
+  // Generate random position within cta boundaries
+  const randomX = padding + Math.random() * Math.max(0, maxX);
+  const randomY = padding + Math.random() * Math.max(0, maxY);
 
   noBtn.classList.add("is-floating");
+  noBtn.style.position = "absolute";
   noBtn.style.left = `${randomX}px`;
   noBtn.style.top = `${randomY}px`;
+  noBtn.style.zIndex = "1000";
 };
 
 noBtn.addEventListener("mouseenter", moveNoButton);

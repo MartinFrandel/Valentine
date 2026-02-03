@@ -91,7 +91,7 @@ body {
 }
 
 .hero img {
-  width: min(520px, 80vw);
+  width: 100%;
   border-radius: 28px;
   box-shadow: 0 16px 30px rgba(255, 79, 154, 0.2);
   object-fit: cover;
@@ -110,11 +110,12 @@ body {
   flex-wrap: wrap;
   margin-top: 20px;
   position: relative;
-  min-height: 64px;
+  min-height: 250px;
 }
 
 .btn {
   border: none;
+  height: 64px;
   border-radius: 999px;
   padding: 14px 30px;
   font-size: 1rem;
@@ -146,7 +147,8 @@ body {
 }
 
 .btn-no.is-floating {
-  position: absolute;
+  position: fixed;
+  z-index: 1000;
 }
 
 .hint {
