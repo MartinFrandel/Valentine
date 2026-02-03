@@ -33,10 +33,12 @@ noBtn.addEventListener("mouseenter", moveNoButton);
 noBtn.addEventListener("pointerenter", moveNoButton);
 noBtn.addEventListener("pointerdown", (event) => {
   event.preventDefault();
+  event.stopPropagation();
   moveNoButton();
 });
 noBtn.addEventListener("click", (event) => {
   event.preventDefault();
+  event.stopPropagation();
   moveNoButton();
 });
 
