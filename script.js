@@ -6,52 +6,135 @@ const replayBtn = document.getElementById("replay-btn");
 const fireworksCanvas = document.getElementById("fireworks");
 const heartContainer = document.getElementById("heart-container");
 
-let isNoButtonMoving = false;
+const padding = 10;
+const safetyMargin = 20;
+const pointerRadiusBase = 40;
+const maxAttempts = 200;
 
-const moveNoButton = () => {
+let panicLevel = 0;
+let initialized = false;
+let currentX = 0;
+let currentY = 0;
+
+// ---------------- HELPERS ----------------
+
+const overlap = (a, b) =>
+  !(
+    a.x + a.w <= b.x ||
+    a.x >= b.x + b.w ||
+    a.y + a.h <= b.y ||
+    a.y >= b.y + b.h
+  );
+
+const nearPointer = (px, py, rect, r) =>
+  !(
+    px + r < rect.x ||
+    px - r > rect.x + rect.w ||
+    py + r < rect.y ||
+    py - r > rect.y + rect.h
+  );
+
+// ---------------- CORE ----------------
+
+function initAbsolutePosition() {
+  if (initialized) return;
+
   const cta = document.querySelector(".cta");
   const ctaRect = cta.getBoundingClientRect();
-  const btnRect = noBtn.getBoundingClientRect();
-  
-  // Padding from cta edges
-  const padding = 10;
-  
-  // Calculate available space within the cta container
-  const maxX = ctaRect.width - btnRect.width - padding * 2;
-  const maxY = ctaRect.height - btnRect.height - padding * 2;
+  const noRect = noBtn.getBoundingClientRect();
 
-  // Generate random position within cta boundaries
-  const randomX = padding + Math.random() * Math.max(0, maxX);
-  const randomY = padding + Math.random() * Math.max(0, maxY);
+  // Convert current visual position into cta-relative coords
+  currentX = noRect.left - ctaRect.left;
+  currentY = noRect.top - ctaRect.top;
 
-  noBtn.classList.add("is-floating");
   noBtn.style.position = "absolute";
-  noBtn.style.left = `${randomX}px`;
-  noBtn.style.top = `${randomY}px`;
-  noBtn.style.zIndex = "1000";
-  
-  // Set flag to prevent YES button from responding
-  isNoButtonMoving = true;
-  setTimeout(() => {
-    isNoButtonMoving = false;
-  }, 200);
-};
+  noBtn.style.left = "0";
+  noBtn.style.top = "0";
+  noBtn.style.transform = `translate(${currentX}px, ${currentY}px)`;
 
+  initialized = true;
+}
+
+function moveNoButton(event) {
+  initAbsolutePosition();
+
+  const cta = document.querySelector(".cta");
+  const ctaRect = cta.getBoundingClientRect();
+  const yesRect = yesBtn.getBoundingClientRect();
+  const noRect = noBtn.getBoundingClientRect();
+
+  const noW = noRect.width;
+  const noH = noRect.height;
+
+  const yesZone = {
+    x: yesRect.left - ctaRect.left - safetyMargin,
+    y: yesRect.top - ctaRect.top - safetyMargin,
+    w: yesRect.width + safetyMargin * 2,
+    h: yesRect.height + safetyMargin * 2,
+  };
+
+  let px = null,
+    py = null;
+
+  if (event) {
+    const p = event.touches ? event.touches[0] : event;
+    px = p.clientX - ctaRect.left;
+    py = p.clientY - ctaRect.top;
+  }
+
+  const maxX = ctaRect.width - noW - padding * 2;
+  const maxY = ctaRect.height - noH - padding * 2;
+
+  let x, y;
+  let valid = false;
+  const pointerRadius = pointerRadiusBase + panicLevel * 8;
+
+  for (let i = 0; i < maxAttempts; i++) {
+    x = padding + Math.random() * Math.max(0, maxX);
+    y = padding + Math.random() * Math.max(0, maxY);
+
+    const area = { x, y, w: noW, h: noH };
+
+    if (overlap(area, yesZone)) continue;
+    if (px !== null && nearPointer(px, py, area, pointerRadius)) continue;
+
+    valid = true;
+    break;
+  }
+
+  if (!valid) return;
+
+  panicLevel++;
+
+  const duration = Math.max(0.12, 0.35 - panicLevel * 0.03);
+  noBtn.style.transitionDuration = `${duration}s`;
+
+  currentX = x;
+  currentY = y;
+  noBtn.style.transform = `translate(${currentX}px, ${currentY}px)`;
+}
+
+// ---------------- EVENTS ----------------
+
+// Any attempt to interact triggers panic 😈
 noBtn.addEventListener("mouseenter", moveNoButton);
-noBtn.addEventListener("pointerenter", moveNoButton);
-noBtn.addEventListener("pointerdown", (event) => {
+noBtn.addEventListener("focus", moveNoButton);
+noBtn.addEventListener("touchstart", (event) => {
   event.preventDefault();
-  event.stopPropagation();
-  moveNoButton();
-});
+  moveNoButton(event);
+}, { passive: false });
 noBtn.addEventListener("click", (event) => {
   event.preventDefault();
   event.stopPropagation();
-  moveNoButton();
+  moveNoButton(event);
+});
+noBtn.addEventListener("pointerdown", (event) => {
+  event.preventDefault();
+  event.stopPropagation();
+  moveNoButton(event);
 });
 
 yesBtn.addEventListener("click", () => {
-  if (isNoButtonMoving) return;
   questionPage.classList.add("hidden");
   celebrationPage.classList.remove("hidden");
   celebrationPage.setAttribute("aria-hidden", "false");

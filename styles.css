@@ -108,16 +108,18 @@ body {
   gap: 20px;
   justify-content: center;
   flex-wrap: wrap;
+  align-items: flex-start;
   margin-top: 20px;
   position: relative;
-  min-height: 250px;
+  min-height: 64px;
+  height: auto;
 }
 
 .btn {
   border: none;
   height: 64px;
   border-radius: 999px;
-  padding: 14px 30px;
+  padding: 0.7em 1.4em;
   font-size: 1rem;
   font-weight: 700;
   cursor: pointer;
@@ -144,11 +146,14 @@ body {
   background: #fff;
   color: #ff4f9a;
   border: 2px solid #ffd0e5;
+  transition: transform 0.35s cubic-bezier(0.25, 1.5, 0.5, 1);
+  will-change: transform;
 }
 
 .btn-no.is-floating {
-  position: fixed;
+  position: absolute;
   z-index: 1000;
+  visibility: visible;
 }
 
 .hint {
@@ -238,12 +243,11 @@ body {
   }
 }
 
-@media (max-width: 640px) {
-  .cta {
-    flex-direction: column;
-  }
 
-  .btn {
-    width: 100%;
+/* Small screens */
+@media (max-width: 480px) {
+  .cta {
+    min-height: 240px;
   }
 }
+
