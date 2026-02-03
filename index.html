@@ -1,0 +1,58 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Will You Be My Valentine?</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Pacifico&family=Quicksand:wght@400;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <div class="bg-hearts" aria-hidden="true"></div>
+
+    <main class="page" id="question-page">
+      <section class="card">
+        <p class="subtitle">a little question for you</p>
+        <h1 class="title">Will you be my Valentine?</h1>
+        <figure class="hero">
+          <img
+            src="file.jpg"
+          alt="Moj wannabe valentine <3"
+          />
+          <!-- <img src="https://images.unsplash.com/photo-1517841905240-472988babdf9?q=80&w=1200&auto=format&fit=crop" alt="A cute puppy holding a rose"/> -->
+        </figure>
+
+        <div class="cta" aria-live="polite">
+          <button class="btn btn-yes" id="yes-btn" type="button">YES 💖</button>
+          <button class="btn btn-no" id="no-btn" type="button">NO 🙃</button>
+        </div>
+
+        <!-- <p class="hint">Try to click “NO” if you dare 😏</p> -->
+      </section>
+    </main>
+
+    <main class="page hidden" id="celebration-page" aria-hidden="true">
+      <section class="card celebration">
+        <h2 class="title">Yaaay! You made my day!</h2>
+        <p class="subtitle">Sending you all the love, cookies, and carbonara.</p>
+        <div class="message">
+          <p>Get ready for me, I'm comming!</p>
+        </div>
+        <div class="actions">
+          <button class="btn btn-yes" id="replay-btn" type="button">
+            Replay the magic ✨
+          </button>
+        </div>
+      </section>
+      <canvas id="fireworks" aria-hidden="true"></canvas>
+      <div id="heart-container" aria-hidden="true"></div>
+    </main>
+
+    <script src="script.js"></script>
+  </body>
+</html>
