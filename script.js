@@ -87,7 +87,8 @@ function moveNoButton(event) {
 
   let x, y;
   let valid = false;
-  const pointerRadius = pointerRadiusBase + panicLevel * 8;
+  // Cap the pointer radius to prevent it from becoming too large on small screens
+  const pointerRadius = Math.min(pointerRadiusBase, 120);
 
   for (let i = 0; i < maxAttempts; i++) {
     x = padding + Math.random() * Math.max(0, maxX);
