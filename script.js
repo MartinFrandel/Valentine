@@ -27,6 +27,12 @@ const moveNoButton = () => {
   noBtn.style.left = `${randomX}px`;
   noBtn.style.top = `${randomY}px`;
   noBtn.style.zIndex = "1000";
+  
+  // Temporarily disable pointer events to prevent click from hitting YES button
+  noBtn.style.pointerEvents = "none";
+  setTimeout(() => {
+    noBtn.style.pointerEvents = "auto";
+  }, 150);
 };
 
 noBtn.addEventListener("mouseenter", moveNoButton);
