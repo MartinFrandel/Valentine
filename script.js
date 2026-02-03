@@ -6,6 +6,8 @@ const replayBtn = document.getElementById("replay-btn");
 const fireworksCanvas = document.getElementById("fireworks");
 const heartContainer = document.getElementById("heart-container");
 
+let isNoButtonMoving = false;
+
 const moveNoButton = () => {
   const cta = document.querySelector(".cta");
   const ctaRect = cta.getBoundingClientRect();
@@ -28,11 +30,11 @@ const moveNoButton = () => {
   noBtn.style.top = `${randomY}px`;
   noBtn.style.zIndex = "1000";
   
-  // Temporarily disable pointer events to prevent click from hitting YES button
-  noBtn.style.pointerEvents = "none";
+  // Set flag to prevent YES button from responding
+  isNoButtonMoving = true;
   setTimeout(() => {
-    noBtn.style.pointerEvents = "auto";
-  }, 150);
+    isNoButtonMoving = false;
+  }, 200);
 };
 
 noBtn.addEventListener("mouseenter", moveNoButton);
@@ -49,6 +51,7 @@ noBtn.addEventListener("click", (event) => {
 });
 
 yesBtn.addEventListener("click", () => {
+  if (isNoButtonMoving) return;
   questionPage.classList.add("hidden");
   celebrationPage.classList.remove("hidden");
   celebrationPage.setAttribute("aria-hidden", "false");
